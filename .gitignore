@@ -1,5 +1,7 @@
 *.class
 target/*
 *.i*
+*.iml
+*.ipr
 *.lock
 .gitconfig
