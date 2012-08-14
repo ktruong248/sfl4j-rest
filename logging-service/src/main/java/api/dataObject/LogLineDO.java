@@ -1,7 +1,7 @@
 package api.dataObject;
 
 import api.dao.mongo.BaseDOListener;
-import api.model.LogLevel;
+import api.model.model.LogLevel;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.EntityListeners;
 

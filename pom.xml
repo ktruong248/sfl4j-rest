@@ -4,14 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>logging-service</groupId>
-    <artifactId>logging-service</artifactId>
+    <groupId>sfl4j-rest</groupId>
+    <artifactId>logging-service-parent</artifactId>
+    <name>Logging Service Parent</name>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>service</module>
-        <module>rest-server</module>
+        <module>logging-service-common</module>
+        <module>logging-service</module>
         <module>logging-service-server</module>
+        <module>logging-service-client</module>
+        <module>rest-server</module>
     </modules>
 
     <properties>
@@ -23,13 +26,18 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>logging-service</groupId>
+                <groupId>sfl4j-rest</groupId>
                 <artifactId>rest-server</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>logging-service</groupId>
-                <artifactId>service</artifactId>
+                <groupId>sfl4j-rest</groupId>
+                <artifactId>logging-service-common</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>sfl4j-rest</groupId>
+                <artifactId>logging-service</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>

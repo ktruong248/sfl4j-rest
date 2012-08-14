@@ -1,20 +1,14 @@
-package api.model;
-
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
+package api.model.model;
 
 import java.io.Serializable;
 
 /**
  * An LogLine contains all the information for a single log event.
- * If this become big, will create a separate DataObject and annotate @Entity
  */
-@Entity(noClassnameStored = true, value = "logs")
 public final class LogLine implements Serializable {
 
     private static final long serialVersionUID = 2988958435513107789L;
 
-    @Id
     private String id;
 
     private LogLevel logLevel;

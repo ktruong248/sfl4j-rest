@@ -1,4 +1,4 @@
-package api.model;
+package api.model.model;
 
 public final class InsertResponse {
     private String logId;

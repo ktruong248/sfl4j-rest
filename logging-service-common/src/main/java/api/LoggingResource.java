@@ -1,6 +1,6 @@
 package api;
 
-import api.model.LogLine;
+import api.model.model.LogLine;
 
 import javax.ws.rs.core.Response;
 

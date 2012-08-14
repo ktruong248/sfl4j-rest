@@ -1,7 +1,7 @@
 package api.mapping;
 
 import api.dataObject.LogLineDO;
-import api.model.LogLine;
+import api.model.model.LogLine;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 

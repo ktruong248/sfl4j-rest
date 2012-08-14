@@ -1,8 +1,8 @@
 package api;
 
-import api.model.InsertResponse;
-import api.model.LogLevel;
-import api.model.LogLine;
+import api.model.model.InsertResponse;
+import api.model.model.LogLevel;
+import api.model.model.LogLine;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

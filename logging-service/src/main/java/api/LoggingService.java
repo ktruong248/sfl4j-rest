@@ -1,7 +1,7 @@
 package api;
 
-import api.model.InsertResponse;
-import api.model.LogLine;
+import api.model.model.InsertResponse;
+import api.model.model.LogLine;
 
 public interface LoggingService {
     InsertResponse insert(LogLine logLine);

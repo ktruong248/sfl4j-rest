@@ -1,7 +1,7 @@
 package api;
 
-import api.model.InsertResponse;
-import api.model.LogLine;
+import api.model.model.InsertResponse;
+import api.model.model.LogLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
