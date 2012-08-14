@@ -45,4 +45,13 @@ public class RESTLoggingResourceTest {
         assertNotNull(insertResponse);
         assertEquals(Response.Status.CREATED.getStatusCode(), insertResponse.getStatus());
     }
+
+    @Test
+    public void shouldAbleToGetById() {
+
+        given(loggingService.getById("some-id")).willReturn(new LogLine());
+
+        LogLine logLine = resource.getById("some-id");
+        assertNotNull(logLine);
+    }
 }

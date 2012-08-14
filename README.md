@@ -24,3 +24,7 @@ To Run
 
     # sample insert new log entry
     $ curl -H "Content-Type: application/json" -X POST -d "{\"logLevel\":\"INFO\",\"message\":\"my log message\",\"details\":\"my long message details\",\"source\":\"sample app\",\"ipAddress\":\"127.0.0.1\",\"logTimeSec\":1247573626}" http://localhost:8080/logs
+
+
+    # sample get
+    $ curl http://localhost:8080/logs/63b2ff7d-d83f-4701-a9e6-09e8fece6f2f

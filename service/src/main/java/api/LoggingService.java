@@ -5,4 +5,6 @@ import api.model.LogLine;
 
 public interface LoggingService {
     InsertResponse insert(LogLine logLine);
+
+    LogLine getById(String id);
 }

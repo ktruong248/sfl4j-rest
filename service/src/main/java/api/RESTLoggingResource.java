@@ -5,9 +5,7 @@ import api.model.LogLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Service
@@ -21,6 +19,12 @@ public class RESTLoggingResource implements LoggingResource {
     public Response insert(LogLine logLine) {
         InsertResponse insertResponse = loggingService.insert(logLine);
         return Response.status(Response.Status.CREATED).entity(insertResponse).build();
+    }
+
+    @GET
+    @Path("/{logId}")
+    public LogLine getById(@PathParam("logId") String id) {
+        return loggingService.getById(id);
     }
 
     @Autowired

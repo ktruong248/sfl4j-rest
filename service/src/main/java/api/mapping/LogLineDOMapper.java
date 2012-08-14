@@ -19,4 +19,15 @@ public class LogLineDOMapper implements Mapper<LogLineDO> {
 
         return logLineDO;
     }
+
+    public LogLine mapFrom(LogLineDO lineDO) {
+        if (lineDO == null) {
+            return null;
+        }
+
+        LogLine logLine = new LogLine();
+        BeanUtils.copyProperties(lineDO, logLine);
+
+        return logLine;
+    }
 }

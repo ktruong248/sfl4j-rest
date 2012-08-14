@@ -24,6 +24,10 @@ public class MongoLoggingDao implements LoggingDao {
         return logLine.getId();
     }
 
+    public LogLineDO find(String id) {
+        return datastore.get(LogLineDO.class, id);
+    }
+
     @Autowired
     public void setDatastore(Datastore datastore) {
         this.datastore = datastore;

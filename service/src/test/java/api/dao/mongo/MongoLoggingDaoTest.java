@@ -8,6 +8,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static junit.framework.Assert.assertNotNull;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.Mockito.times;
 
@@ -32,5 +34,15 @@ public class MongoLoggingDaoTest {
         dao.insert(logLine);
 
         verify(dataStore, times(1)).save(logLine);
+    }
+
+    @Test
+    public void shouldFindById() {
+
+        String id = "some id";
+        given(dataStore.get(LogLineDO.class, id)).willReturn(new LogLineDO());
+
+        LogLineDO logLineDO = dao.find(id);
+        assertNotNull(logLineDO);
     }
 }

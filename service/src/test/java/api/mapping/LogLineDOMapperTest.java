@@ -41,4 +41,27 @@ public class LogLineDOMapperTest {
         LogLineDO logLineDO = mapper.mapTo(log);
         assertNull(logLineDO.getId());
     }
+
+    @Test
+    public void shouldMapFromLogLineDO() {
+
+        LogLineDO logLineDO = new LogLineDO();
+        logLineDO.setId("some id");
+        logLineDO.setDetails("details");
+        logLineDO.setIpAddress("ipaddress");
+        logLineDO.setLogLevel(LogLevel.DEBUG);
+        logLineDO.setLogTimeSec(12345);
+        logLineDO.setMessage("message");
+        logLineDO.setSource("source");
+
+        LogLine logLine = mapper.mapFrom(logLineDO);
+        assertNotNull(logLine);
+        assertEquals(logLineDO.getId(), logLine.getId());
+        assertEquals(logLineDO.getSource(), logLine.getSource());
+        assertEquals(logLineDO.getMessage(), logLine.getMessage());
+        assertEquals(logLineDO.getDetails(), logLine.getDetails());
+        assertEquals(logLineDO.getIpAddress(), logLine.getIpAddress());
+        assertEquals(logLineDO.getLogLevel(), logLine.getLogLevel());
+        assertEquals(logLineDO.getLogTimeSec(), logLine.getLogTimeSec());
+    }
 }

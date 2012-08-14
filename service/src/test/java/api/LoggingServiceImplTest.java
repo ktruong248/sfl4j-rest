@@ -5,6 +5,7 @@ import api.dataObject.LogLineDO;
 import api.mapping.Mapper;
 import api.model.InsertResponse;
 import api.model.LogLine;
+import com.sun.jersey.api.NotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,5 +47,29 @@ public class LoggingServiceImplTest {
         InsertResponse insertResponse = service.insert(logLine);
         assertNotNull(insertResponse);
         assertEquals(insertId, insertResponse.getLogId());
+    }
+
+    @Test
+    public void shouldAbleToGetById() {
+
+        String logId = "some id";
+
+        LogLineDO logLineDO = new LogLineDO();
+        LogLine logLine = new LogLine();
+
+        given(dao.find(logId)).willReturn(logLineDO);
+        given(mapper.mapFrom(logLineDO)).willReturn(logLine);
+
+        LogLine line = service.getById(logId);
+        assertNotNull(line);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void shouldThrowNotFoundExceptionForNullLogLineDO() {
+        String logId = "some unknown id";
+
+        given(dao.find(logId)).willReturn(null);
+
+        service.getById(logId);
     }
 }
