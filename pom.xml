@@ -11,6 +11,7 @@
     <modules>
         <module>service</module>
         <module>rest-server</module>
+        <module>logging-service-server</module>
     </modules>
 
     <properties>
@@ -24,6 +25,11 @@
             <dependency>
                 <groupId>logging-service</groupId>
                 <artifactId>rest-server</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>logging-service</groupId>
+                <artifactId>service</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
@@ -51,9 +57,29 @@
                 <artifactId>spring-web</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-jaxrs</artifactId>
+                <version>1.9.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-core</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-server</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>r08</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

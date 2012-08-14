@@ -9,16 +9,29 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>service</artifactId>
-
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>logging-service</groupId>
-            <artifactId>rest-server</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.code.morphia</groupId>
             <artifactId>morphia</artifactId>
             <version>0.99</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-server</artifactId>
         </dependency>
     </dependencies>
 

@@ -9,7 +9,7 @@ import java.io.Serializable;
  * An LogLine contains all the information for a single log event.
  * If this become big, will create a separate DataObject and annotate @Entity
  */
-@Entity
+@Entity(noClassnameStored = true, value = "logs")
 public final class LogLine implements Serializable {
 
     private static final long serialVersionUID = 2988958435513107789L;
