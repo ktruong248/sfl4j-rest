@@ -11,5 +11,19 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>logging-service-client</artifactId>
     <name>Logging Service Client</name>
-
+    <dependencies>
+        <dependency>
+            <groupId>sfl4j-rest</groupId>
+            <artifactId>logging-service-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey.contribs</groupId>
+            <artifactId>jersey-apache-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-json</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+    </dependencies>
 </project>
