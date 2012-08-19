@@ -15,12 +15,14 @@
         <module>logging-service-server</module>
         <module>logging-service-client</module>
         <module>rest-server</module>
+        <module>slf4j-rest-impl</module>
     </modules>
 
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>
         <jersey.version>1.13</jersey.version>
         <jetty.version>8.0.4.v20111024</jetty.version>
+        <slf4j.api.version>1.6.1</slf4j.api.version>
     </properties>
 
     <repositories>
@@ -93,6 +95,12 @@
                 <artifactId>jersey-apache-client</artifactId>
                 <version>${jersey.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>1.6.1</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -104,13 +112,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.1</version>
-            <scope>test</scope>
+            <version>${slf4j.api.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

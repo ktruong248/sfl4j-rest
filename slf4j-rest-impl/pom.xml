@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>logging-service-parent</artifactId>
+        <groupId>sfl4j-rest</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>slf4j-rest-impl</artifactId>
+    <packaging>jar</packaging>
+    <name>SLF4J RESTful Logging Binding</name>
+    <description>SLF4J RESTful Logging Binding</description>
+
+    <properties>
+        <slf4j.rest.impl.version>${project.version}</slf4j.rest.impl.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Bundle-Version>${slf4j.api.version}</Bundle-Version>
+                            <Bundle-Description>${project.description}</Bundle-Description>
+                            <Implementation-Version>${project.version}</Implementation-Version>
+                        </manifestEntries>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
