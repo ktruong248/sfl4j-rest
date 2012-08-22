@@ -26,10 +26,17 @@ package org.slf4j.impl;
 
 import api.LoggingServiceClient;
 import api.LoggingServiceClientImpl;
+import org.apache.log4j.helpers.Loader;
+import org.apache.log4j.helpers.LogLog;
+import org.apache.log4j.helpers.OptionConverter;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.slf4j.rest.impl.LoggingRESTServiceLoggerFactory;
 import org.slf4j.spi.LoggerFactoryBinder;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Properties;
 
 /**
  * The binding of {@link LoggerFactory} class with an actual instance of
@@ -41,6 +48,16 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
      * The unique instance of this class.
      */
     private static final StaticLoggerBinder SINGLETON = new StaticLoggerBinder();
+
+    private static final String DEFAULT_CONFIGURATION_KEY = "sfl4j-rest-config";
+
+    private static final String DEFAULT_CONFIGURATION_FILE = "sfl4j-rest-config.properties";
+
+    private static Properties configProperties = null;
+
+    private static final String LOGGING_SERVICE_URL_KEY = "logging.service.url";
+
+    private static final String LOGGING_SERVICE_APP_NAME_KEY = "logging.service.appName";
 
     /**
      * Return the singleton of this class.
@@ -66,11 +83,9 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
 
 
     private StaticLoggerBinder() {
-        String serviceURL = "http://localhost:8080";
-        // todo parsing config here ??
-        String appName = "todo app name parsing";
-        LoggingServiceClient loggingServiceClient = new LoggingServiceClientImpl(serviceURL);
-        loggerFactory = new LoggingRESTServiceLoggerFactory(loggingServiceClient, appName);
+        Properties config = getConfig();
+        LoggingServiceClient loggingServiceClient = new LoggingServiceClientImpl(config.getProperty(LOGGING_SERVICE_URL_KEY));
+        loggerFactory = new LoggingRESTServiceLoggerFactory(loggingServiceClient, config.getProperty(LOGGING_SERVICE_APP_NAME_KEY));
     }
 
     public ILoggerFactory getLoggerFactory() {
@@ -79,5 +94,38 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
 
     public String getLoggerFactoryClassStr() {
         return loggerFactoryClassStr;
+    }
+
+    public Properties getConfig() {
+        if (configProperties == null) {
+
+            String configPath = OptionConverter.getSystemProperty(DEFAULT_CONFIGURATION_KEY, null);
+            URL url;
+
+            // if the user has not specified the sfl4j-rest-config
+            // property, we search first for the app-config.properties"
+            if (configPath == null) {
+                url = Loader.getResource(DEFAULT_CONFIGURATION_FILE);
+            } else {
+                try {
+                    url = new URL(configPath);
+                } catch (MalformedURLException ex) {
+                    // so, resource is not a URL:
+                    // attempt to get the resource from the class path
+                    url = StaticLoggerBinder.class.getClassLoader().getResource(configPath);
+                }
+            }
+            configProperties = new Properties();
+
+            try {
+                configProperties.load(url.openStream());
+            } catch (Exception e) {
+                configProperties.setProperty(LOGGING_SERVICE_URL_KEY, "http://localhost:8080");
+                configProperties.setProperty(LOGGING_SERVICE_APP_NAME_KEY, "dev");
+                LogLog.error("failed to load " + url, e);
+            }
+        }
+
+        return configProperties;
     }
 }

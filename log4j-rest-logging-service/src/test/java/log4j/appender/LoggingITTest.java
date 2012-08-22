@@ -1,4 +1,4 @@
-package org.slf4j.impl;
+package log4j.appender;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -9,11 +9,11 @@ public class LoggingITTest {
     private static final Logger logger = LoggerFactory.getLogger(LoggingITTest.class);
 
     @Test
-    @Ignore("enabled for IT Test")
+    @Ignore("enabled for Integration Test")
     public void shouldLogDebug() {
         String msg = "debug message";
         logger.debug(msg);
-        logger.debug(msg, new RuntimeException("test", new NullPointerException("some null")));
+        logger.debug(msg, new RuntimeException("test", new NullPointerException("some null exception test")));
         logger.debug("debug message {} -> {}", "1", "2");
     }
 }

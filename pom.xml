@@ -16,6 +16,7 @@
         <module>logging-service-client</module>
         <module>rest-server</module>
         <module>slf4j-rest-impl</module>
+        <module>log4j-rest-logging-service</module>
     </modules>
 
     <properties>
