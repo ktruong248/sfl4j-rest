@@ -1,5 +1,6 @@
 package org.slf4j.rest.impl;
 
+import api.LoggingServiceClient;
 import org.apache.log4j.LogManager;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
@@ -11,8 +12,14 @@ public class LoggingRESTServiceLoggerFactory implements ILoggerFactory {
 
     private Map<String, Logger> loggerMap;
 
-    public LoggingRESTServiceLoggerFactory() {
+    private LoggingServiceClient loggingServiceClient;
+
+    private String appName;
+
+    public LoggingRESTServiceLoggerFactory(LoggingServiceClient loggingServiceClient, String appName) {
         loggerMap = new ConcurrentHashMap<String, Logger>();
+        this.loggingServiceClient = loggingServiceClient;
+        this.appName = appName;
     }
 
     /*
@@ -32,7 +39,8 @@ public class LoggingRESTServiceLoggerFactory implements ILoggerFactory {
                 } else {
                     log4jLogger = LogManager.getLogger(name);
                 }
-                slf4jLogger = new LoggingRESTServiceAdapter(log4jLogger);
+                LoggingRESTService4jLogger restService4jLogger = new LoggingRESTService4jLogger(log4jLogger, loggingServiceClient);
+                slf4jLogger = new LoggingRESTServiceAdapter(restService4jLogger, appName);
                 loggerMap.put(name, slf4jLogger);
             }
         }

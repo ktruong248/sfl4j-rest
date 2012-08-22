@@ -8,15 +8,12 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 public final class LoggingServiceClientImpl implements LoggingServiceClient {
-    private static final Logger log = LoggerFactory.getLogger(LoggingServiceClientImpl.class);
 
     public static final int DEFAULT_CONNECT_TIMEOUT_MS = 60000;
 
@@ -47,8 +44,6 @@ public final class LoggingServiceClientImpl implements LoggingServiceClient {
     }
 
     public String insert(LogLine logLine) {
-        log.info("inserting {} to {}", logLine, this.serviceUrl);
-
         URI insertURI = UriBuilder.fromPath(this.serviceUrl).build();
         WebResource resource = client.resource(insertURI);
         ClientResponse clientResponse = resource.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, logLine);
@@ -59,8 +54,6 @@ public final class LoggingServiceClientImpl implements LoggingServiceClient {
 
     public LogLine get(String id) {
         URI getURI = UriBuilder.fromPath(this.serviceUrl).path("{logId}").build(id);
-        log.info("getting log id {}", id);
-
         WebResource resource = client.resource(getURI);
         try {
             ClientResponse response = resource.get(ClientResponse.class);

@@ -1,5 +1,6 @@
 package org.slf4j.rest.impl;
 
+import api.common.Utils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.slf4j.Marker;
@@ -26,7 +27,6 @@ import java.io.Serializable;
  * 1.2.12, the TRACE level will be mapped as DEBUG. See also <a
  * href="http://bugzilla.slf4j.org/show_bug.cgi?id=68">bug 68</a>.
  * <p/>
- * TODO will incorporate LoggingServiceClient to do the actual logging
  *
  * @author Ceki G&uuml;lc&uuml;
  * @author Khiem Truong;
@@ -34,7 +34,7 @@ import java.io.Serializable;
 public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implements
         LocationAwareLogger, Serializable {
 
-    private static final long serialVersionUID = -7618539134523125965L;
+    private static final long serialVersionUID = -5623116085876917915L;
 
     // Does the log4j version in use recognize the TRACE level?
     // The trace level was introduced in log4j 1.2.12.
@@ -49,14 +49,22 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      */
     final static String FQCN = LoggingRESTServiceAdapter.class.getName();
 
+    private String appName;
+
+    private String ipAddress;
+
+    private LoggingRESTService4jLogger restService4jLogger;
 
     // WARN: LoggingRESTServiceAdapter constructor should have only package access so
     // that
     // only LoggingRESTServiceAdapter be able to create one.
-    LoggingRESTServiceAdapter(Logger logger) {
-        this.logger = logger;
-        this.name = logger.getName();
-        traceCapable = isTraceCapable();
+    LoggingRESTServiceAdapter(LoggingRESTService4jLogger restService4jLogger, String appName) {
+        this.logger = restService4jLogger.getLogger();
+        this.name = restService4jLogger.getLogger().getName();
+        this.appName = appName;
+        this.ipAddress = Utils.localAddress();
+        this.traceCapable = isTraceCapable();
+        this.restService4jLogger = restService4jLogger;
     }
 
     /**
@@ -74,7 +82,11 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param msg - the message object to be logged
      */
     public void trace(String msg) {
-        logger.log(FQCN, traceCapable ? Level.TRACE : Level.DEBUG, msg, null);
+        if (traceCapable) {
+            restService4jLogger.trace(FQCN, msg, appName, ipAddress, null);
+        } else {
+            restService4jLogger.debug(FQCN, msg, appName, ipAddress, null);
+        }
     }
 
     /**
@@ -90,10 +102,12 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param arg    the argument
      */
     public void trace(String format, Object arg) {
-        if (isTraceEnabled()) {
+        if (traceCapable) {
             FormattingTuple ft = MessageFormatter.format(format, arg);
-            logger.log(FQCN, traceCapable ? Level.TRACE : Level.DEBUG, ft
-                    .getMessage(), ft.getThrowable());
+            restService4jLogger.trace(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
+        } else {
+            FormattingTuple ft = MessageFormatter.format(format, arg);
+            restService4jLogger.debug(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -111,10 +125,12 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param arg2   the second argument
      */
     public void trace(String format, Object arg1, Object arg2) {
-        if (isTraceEnabled()) {
+        if (traceCapable) {
             FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
-            logger.log(FQCN, traceCapable ? Level.TRACE : Level.DEBUG, ft
-                    .getMessage(), ft.getThrowable());
+            restService4jLogger.trace(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
+        } else {
+            FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
+            restService4jLogger.debug(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -131,10 +147,12 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param argArray an array of arguments
      */
     public void trace(String format, Object[] argArray) {
-        if (isTraceEnabled()) {
-            FormattingTuple ft = MessageFormatter.arrayFormat(format, argArray);
-            logger.log(FQCN, traceCapable ? Level.TRACE : Level.DEBUG, ft
-                    .getMessage(), ft.getThrowable());
+        if (traceCapable) {
+            FormattingTuple ft = MessageFormatter.format(format, argArray);
+            restService4jLogger.trace(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
+        } else {
+            FormattingTuple ft = MessageFormatter.format(format, argArray);
+            restService4jLogger.debug(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -145,7 +163,11 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param t   the exception (throwable) to log
      */
     public void trace(String msg, Throwable t) {
-        logger.log(FQCN, traceCapable ? Level.TRACE : Level.DEBUG, msg, t);
+        if (traceCapable) {
+            restService4jLogger.trace(FQCN, msg, appName, ipAddress, t);
+        } else {
+            restService4jLogger.debug(FQCN, msg, appName, ipAddress, t);
+        }
     }
 
     /**
@@ -163,7 +185,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param msg - the message object to be logged
      */
     public void debug(String msg) {
-        logger.log(FQCN, Level.DEBUG, msg, null);
+        if (isDebugEnabled()) {
+            restService4jLogger.debug(FQCN, msg, appName, ipAddress, null);
+        }
     }
 
     /**
@@ -179,9 +203,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param arg    the argument
      */
     public void debug(String format, Object arg) {
-        if (logger.isDebugEnabled()) {
+        if (isDebugEnabled()) {
             FormattingTuple ft = MessageFormatter.format(format, arg);
-            logger.log(FQCN, Level.DEBUG, ft.getMessage(), ft.getThrowable());
+            restService4jLogger.debug(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -199,9 +223,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param arg2   the second argument
      */
     public void debug(String format, Object arg1, Object arg2) {
-        if (logger.isDebugEnabled()) {
+        if (isDebugEnabled()) {
             FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
-            logger.log(FQCN, Level.DEBUG, ft.getMessage(), ft.getThrowable());
+            restService4jLogger.debug(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -218,9 +242,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param argArray an array of arguments
      */
     public void debug(String format, Object[] argArray) {
-        if (logger.isDebugEnabled()) {
+        if (isDebugEnabled()) {
             FormattingTuple ft = MessageFormatter.arrayFormat(format, argArray);
-            logger.log(FQCN, Level.DEBUG, ft.getMessage(), ft.getThrowable());
+            restService4jLogger.debug(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -231,7 +255,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param t   the exception (throwable) to log
      */
     public void debug(String msg, Throwable t) {
-        logger.log(FQCN, Level.DEBUG, msg, t);
+        if (isDebugEnabled()) {
+            restService4jLogger.debug(FQCN, msg, appName, ipAddress, t);
+        }
     }
 
     /**
@@ -249,7 +275,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param msg - the message object to be logged
      */
     public void info(String msg) {
-        logger.log(FQCN, Level.INFO, msg, null);
+        if (isInfoEnabled()) {
+            restService4jLogger.info(FQCN, msg, appName, ipAddress, null);
+        }
     }
 
     /**
@@ -264,9 +292,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param arg    the argument
      */
     public void info(String format, Object arg) {
-        if (logger.isInfoEnabled()) {
+        if (isInfoEnabled()) {
             FormattingTuple ft = MessageFormatter.format(format, arg);
-            logger.log(FQCN, Level.INFO, ft.getMessage(), ft.getThrowable());
+            restService4jLogger.info(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -284,9 +312,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param arg2   the second argument
      */
     public void info(String format, Object arg1, Object arg2) {
-        if (logger.isInfoEnabled()) {
+        if (isInfoEnabled()) {
             FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
-            logger.log(FQCN, Level.INFO, ft.getMessage(), ft.getThrowable());
+            restService4jLogger.info(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -303,9 +331,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param argArray an array of arguments
      */
     public void info(String format, Object[] argArray) {
-        if (logger.isInfoEnabled()) {
+        if (isInfoEnabled()) {
             FormattingTuple ft = MessageFormatter.arrayFormat(format, argArray);
-            logger.log(FQCN, Level.INFO, ft.getMessage(), ft.getThrowable());
+            restService4jLogger.info(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -317,7 +345,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param t   the exception (throwable) to log
      */
     public void info(String msg, Throwable t) {
-        logger.log(FQCN, Level.INFO, msg, t);
+        if (isInfoEnabled()) {
+            restService4jLogger.info(FQCN, msg, appName, ipAddress, t);
+        }
     }
 
     /**
@@ -335,7 +365,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param msg - the message object to be logged
      */
     public void warn(String msg) {
-        logger.log(FQCN, Level.WARN, msg, null);
+        if (isWarnEnabled()) {
+            restService4jLogger.warn(FQCN, msg, appName, ipAddress, null);
+        }
     }
 
     /**
@@ -351,9 +383,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param arg    the argument
      */
     public void warn(String format, Object arg) {
-        if (logger.isEnabledFor(Level.WARN)) {
+        if (isWarnEnabled()) {
             FormattingTuple ft = MessageFormatter.format(format, arg);
-            logger.log(FQCN, Level.WARN, ft.getMessage(), ft.getThrowable());
+            restService4jLogger.warn(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -371,9 +403,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param arg2   the second argument
      */
     public void warn(String format, Object arg1, Object arg2) {
-        if (logger.isEnabledFor(Level.WARN)) {
+        if (isWarnEnabled()) {
             FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
-            logger.log(FQCN, Level.WARN, ft.getMessage(), ft.getThrowable());
+            restService4jLogger.warn(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -390,9 +422,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param argArray an array of arguments
      */
     public void warn(String format, Object[] argArray) {
-        if (logger.isEnabledFor(Level.WARN)) {
+        if (isWarnEnabled()) {
             FormattingTuple ft = MessageFormatter.arrayFormat(format, argArray);
-            logger.log(FQCN, Level.WARN, ft.getMessage(), ft.getThrowable());
+            restService4jLogger.warn(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -404,7 +436,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param t   the exception (throwable) to log
      */
     public void warn(String msg, Throwable t) {
-        logger.log(FQCN, Level.WARN, msg, t);
+        if (isWarnEnabled()) {
+            restService4jLogger.warn(FQCN, msg, appName, ipAddress, t);
+        }
     }
 
     /**
@@ -422,7 +456,7 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param msg - the message object to be logged
      */
     public void error(String msg) {
-        logger.log(FQCN, Level.ERROR, msg, null);
+        restService4jLogger.error(FQCN, msg, appName, ipAddress, null);
     }
 
     /**
@@ -438,9 +472,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param arg    the argument
      */
     public void error(String format, Object arg) {
-        if (logger.isEnabledFor(Level.ERROR)) {
+        if (isErrorEnabled()) {
             FormattingTuple ft = MessageFormatter.format(format, arg);
-            logger.log(FQCN, Level.ERROR, ft.getMessage(), ft.getThrowable());
+            restService4jLogger.error(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -458,9 +492,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param arg2   the second argument
      */
     public void error(String format, Object arg1, Object arg2) {
-        if (logger.isEnabledFor(Level.ERROR)) {
+        if (isErrorEnabled()) {
             FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
-            logger.log(FQCN, Level.ERROR, ft.getMessage(), ft.getThrowable());
+            restService4jLogger.error(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -477,9 +511,9 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param argArray an array of arguments
      */
     public void error(String format, Object[] argArray) {
-        if (logger.isEnabledFor(Level.ERROR)) {
+        if (isErrorEnabled()) {
             FormattingTuple ft = MessageFormatter.arrayFormat(format, argArray);
-            logger.log(FQCN, Level.ERROR, ft.getMessage(), ft.getThrowable());
+            restService4jLogger.error(FQCN, ft.getMessage(), appName, ipAddress, ft.getThrowable());
         }
     }
 
@@ -491,33 +525,32 @@ public final class LoggingRESTServiceAdapter extends MarkerIgnoringBase implemen
      * @param t   the exception (throwable) to log
      */
     public void error(String msg, Throwable t) {
-        logger.log(FQCN, Level.ERROR, msg, t);
+        if (isErrorEnabled()) {
+            restService4jLogger.error(FQCN, msg, appName, ipAddress, t);
+        }
     }
 
     public void log(Marker marker, String callerFQCN, int level, String msg,
                     Object[] argArray, Throwable t) {
-        Level log4jLevel;
         switch (level) {
             case LocationAwareLogger.TRACE_INT:
-                log4jLevel = traceCapable ? Level.TRACE : Level.DEBUG;
+                restService4jLogger.debug(callerFQCN, msg, appName, ipAddress, t);
                 break;
             case LocationAwareLogger.DEBUG_INT:
-                log4jLevel = Level.DEBUG;
+                restService4jLogger.debug(callerFQCN, msg, appName, ipAddress, t);
                 break;
             case LocationAwareLogger.INFO_INT:
-                log4jLevel = Level.INFO;
+                restService4jLogger.info(callerFQCN, msg, appName, ipAddress, t);
                 break;
             case LocationAwareLogger.WARN_INT:
-                log4jLevel = Level.WARN;
+                restService4jLogger.warn(callerFQCN, msg, appName, ipAddress, t);
                 break;
             case LocationAwareLogger.ERROR_INT:
-                log4jLevel = Level.ERROR;
+                restService4jLogger.error(callerFQCN, msg, appName, ipAddress, t);
                 break;
             default:
-                throw new IllegalStateException("Level number " + level
-                        + " is not recognized.");
+                throw new IllegalStateException("Level number " + level + " is not recognized.");
         }
-        logger.log(callerFQCN, log4jLevel, msg, t);
     }
 
     private boolean isTraceCapable() {

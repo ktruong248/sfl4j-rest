@@ -34,8 +34,13 @@ import java.util.Map;
 
 /**
  * Test whether invoking the SLF4J API causes problems or not.
+ * <p/>
+ * This test assume that "Trace" is turn off, otherwise the listAppender count will be double
+ * one for rest service call failure
+ * one for the logger fall back
  *
  * @author Ceki Gulcu
+ * @author Khiem Truong
  */
 public class InvocationTest extends TestCase {
 
@@ -71,8 +76,6 @@ public class InvocationTest extends TestCase {
         Exception e = new Exception("This is a test exception.");
         Logger logger = LoggerFactory.getLogger("test2");
 
-        logger.trace("Hello trace.");
-
         logger.debug("Hello world 1.");
         logger.debug("Hello world {}", i1);
         logger.debug("val={} val={}", i1, i2);
@@ -92,7 +95,6 @@ public class InvocationTest extends TestCase {
 
     public void testNull() {
         Logger logger = LoggerFactory.getLogger("testNull");
-        logger.trace(null);
         logger.debug(null);
         logger.info(null);
         logger.warn(null);
@@ -121,7 +123,6 @@ public class InvocationTest extends TestCase {
     public void testMarker() {
         Logger logger = LoggerFactory.getLogger("testMarker");
         Marker blue = MarkerFactory.getMarker("BLUE");
-        logger.trace(blue, "hello");
         logger.debug(blue, "hello");
         logger.info(blue, "hello");
         logger.warn(blue, "hello");

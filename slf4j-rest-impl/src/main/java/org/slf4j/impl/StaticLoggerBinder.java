@@ -24,6 +24,8 @@
  */
 package org.slf4j.impl;
 
+import api.LoggingServiceClient;
+import api.LoggingServiceClientImpl;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.slf4j.rest.impl.LoggingRESTServiceLoggerFactory;
@@ -64,7 +66,11 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
 
 
     private StaticLoggerBinder() {
-        loggerFactory = new LoggingRESTServiceLoggerFactory();
+        String serviceURL = "http://localhost:8080";
+        // todo parsing config here ??
+        String appName = "todo app name parsing";
+        LoggingServiceClient loggingServiceClient = new LoggingServiceClientImpl(serviceURL);
+        loggerFactory = new LoggingRESTServiceLoggerFactory(loggingServiceClient, appName);
     }
 
     public ILoggerFactory getLoggerFactory() {
