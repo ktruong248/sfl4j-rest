@@ -1,20 +1,24 @@
-SLF4J Logging Service
+Logging Service
 ---------------
 
-The purpose of this project is to create an implementation of SLF4J API that will do logging through REST api.
+The purpose of this project is to create a common logging framework service that will allow logging through simple REST api.
+There are also custom handler/appender implementations for the 2 most prevalent Java logging frameworks in play.
 
-Modules
+1. slf4j
+2.	Log4j
 
-   rest-server: wrapper to run jetty with spring as daemon
+## Modules
 
-   slflog4j-rest: implementation of slflog4j, that will talk to logging service if enabled else do the normal logging
+*   rest-server: wrapper to run jetty with spring framework integration
+*   logging-service-server: main class to startup logging service api
+*   logging-service: main module contain all the service api and dao classes
+*   slf4j-rest-impl: implementation of slflog4j, that will talk to logging service API if enabled else do the normal Log4j
+*   log4j-rest-logging-service: Log4j appender for logging to Logging Service API
+*   service-client: service client to logging service api
 
-   service-client: client to REST logging service api
 
-   service: the REST api for logging as well as query
-
-
-To Run
+Quick Start
+------------
 
     # from parent project
     $ mvn clean install
