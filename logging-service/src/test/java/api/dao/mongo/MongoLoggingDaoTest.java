@@ -1,6 +1,6 @@
 package api.dao.mongo;
 
-import api.dataObject.LogLineDO;
+import api.domain.LogEntry;
 import com.google.code.morphia.Datastore;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class MongoLoggingDaoTest {
 
     @Test
     public void shouldInsert() {
-        LogLineDO logLine = new LogLineDO();
+        LogEntry logLine = new LogEntry();
 
         dao.insert(logLine);
 
@@ -40,9 +40,9 @@ public class MongoLoggingDaoTest {
     public void shouldFindById() {
 
         String id = "some id";
-        given(dataStore.get(LogLineDO.class, id)).willReturn(new LogLineDO());
+        given(dataStore.get(LogEntry.class, id)).willReturn(new LogEntry());
 
-        LogLineDO logLineDO = dao.find(id);
+        LogEntry logLineDO = dao.find(id);
         assertNotNull(logLineDO);
     }
 }

@@ -1,7 +1,7 @@
 package api;
 
 import api.dao.LoggingDao;
-import api.dataObject.LogLineDO;
+import api.domain.LogEntry;
 import api.mapping.Mapper;
 import api.model.model.InsertResponse;
 import api.model.model.LogLine;
@@ -25,7 +25,7 @@ public class LoggingServiceImplTest {
     private LoggingDao dao;
 
     @Mock
-    private Mapper<LogLineDO> mapper;
+    private Mapper<LogEntry> mapper;
 
     @Before
     public void setup() {
@@ -39,7 +39,7 @@ public class LoggingServiceImplTest {
         LogLine logLine = new LogLine();
         String insertId = "some id";
 
-        LogLineDO logLineDO = new LogLineDO();
+        LogEntry logLineDO = new LogEntry();
 
         given(mapper.mapTo(logLine)).willReturn(logLineDO);
         given(dao.insert(logLineDO)).willReturn(insertId);
@@ -54,7 +54,7 @@ public class LoggingServiceImplTest {
 
         String logId = "some id";
 
-        LogLineDO logLineDO = new LogLineDO();
+        LogEntry logLineDO = new LogEntry();
         LogLine logLine = new LogLine();
 
         given(dao.find(logId)).willReturn(logLineDO);

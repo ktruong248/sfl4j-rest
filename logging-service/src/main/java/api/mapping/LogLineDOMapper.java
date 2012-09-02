@@ -1,26 +1,26 @@
 package api.mapping;
 
-import api.dataObject.LogLineDO;
+import api.domain.LogEntry;
 import api.model.model.LogLine;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LogLineDOMapper implements Mapper<LogLineDO> {
-    public LogLineDO mapTo(LogLine logLine) {
+public class LogLineDOMapper implements Mapper<LogEntry> {
+    public LogEntry mapTo(LogLine logLine) {
 
         if (logLine == null) {
             return null;
         }
 
-        LogLineDO logLineDO = new LogLineDO();
+        LogEntry logLineDO = new LogEntry();
         BeanUtils.copyProperties(logLine, logLineDO);
         logLineDO.setId(null);
 
         return logLineDO;
     }
 
-    public LogLine mapFrom(LogLineDO lineDO) {
+    public LogLine mapFrom(LogEntry lineDO) {
         if (lineDO == null) {
             return null;
         }

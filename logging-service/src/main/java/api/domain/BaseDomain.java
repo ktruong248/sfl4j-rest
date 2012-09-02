@@ -1,10 +1,10 @@
-package api.dataObject;
+package api.domain;
 
 import com.google.code.morphia.annotations.Id;
 
 import java.util.Date;
 
-public class BaseDO {
+public class BaseDomain {
 
     @Id
     private String id;
@@ -40,9 +40,9 @@ public class BaseDO {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BaseDO)) return false;
+        if (!(o instanceof BaseDomain)) return false;
 
-        BaseDO baseDO = (BaseDO) o;
+        BaseDomain baseDO = (BaseDomain) o;
 
         if (created != null ? !created.equals(baseDO.created) : baseDO.created != null) return false;
         return !(id != null ? !id.equals(baseDO.id) : baseDO.id != null) && !(modified != null ? !modified.equals(baseDO.modified) : baseDO.modified != null);

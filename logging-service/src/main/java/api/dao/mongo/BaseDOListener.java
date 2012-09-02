@@ -2,7 +2,7 @@ package api.dao.mongo;
 
 import api.common.IdGenerator;
 import api.common.UniqueIdGenerator;
-import api.dataObject.BaseDO;
+import api.domain.BaseDomain;
 import com.google.code.morphia.annotations.PrePersist;
 import org.springframework.util.StringUtils;
 
@@ -16,7 +16,7 @@ public final class BaseDOListener {
     }
 
     @PrePersist
-    public void processPrePersist(BaseDO entity) {
+    public void processPrePersist(BaseDomain entity) {
 
         if (!StringUtils.hasLength(entity.getId())) {
             entity.setId(idGenerator.randomId());

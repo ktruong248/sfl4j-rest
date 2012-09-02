@@ -1,6 +1,6 @@
 package api.dao.mongo;
 
-import api.dataObject.BaseDO;
+import api.domain.BaseDomain;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,12 +16,12 @@ import static org.junit.Assert.fail;
 
 public class BaseDOListenerTest {
     BaseDOListener listener;
-    private BaseDO account;
+    private BaseDomain account;
 
     @Before
     public void setup() {
         listener = new BaseDOListener();
-        account = new BaseDO();
+        account = new BaseDomain();
     }
 
 

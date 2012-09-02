@@ -1,7 +1,7 @@
 package api;
 
 import api.dao.LoggingDao;
-import api.dataObject.LogLineDO;
+import api.domain.LogEntry;
 import api.mapping.Mapper;
 import api.model.model.InsertResponse;
 import api.model.model.LogLine;
@@ -17,19 +17,19 @@ public class LoggingServiceImpl implements LoggingService {
 
     private LoggingDao loggingDao;
 
-    private Mapper<LogLineDO> mapper;
+    private Mapper<LogEntry> mapper;
 
     public InsertResponse insert(LogLine logLine) {
         log.info("inserting {}", logLine);
 
-        LogLineDO logLineDO = mapper.mapTo(logLine);
+        LogEntry logLineDO = mapper.mapTo(logLine);
         String id = loggingDao.insert(logLineDO);
 
         return new InsertResponse(id);
     }
 
     public LogLine getById(String id) {
-        LogLineDO logLineDO = loggingDao.find(id);
+        LogEntry logLineDO = loggingDao.find(id);
 
         if (logLineDO != null) {
             return mapper.mapFrom(logLineDO);
@@ -44,7 +44,7 @@ public class LoggingServiceImpl implements LoggingService {
     }
 
     @Autowired
-    public void setMapper(Mapper<LogLineDO> mapper) {
+    public void setMapper(Mapper<LogEntry> mapper) {
         this.mapper = mapper;
     }
 }

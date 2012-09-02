@@ -1,7 +1,7 @@
 package api.dao.mongo;
 
 import api.dao.LoggingDao;
-import api.dataObject.LogLineDO;
+import api.domain.LogEntry;
 import com.google.code.morphia.Datastore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,7 @@ public class MongoLoggingDao implements LoggingDao {
     private static final Logger log = LoggerFactory.getLogger(MongoLoggingDao.class);
     private Datastore datastore;
 
-    public String insert(LogLineDO logLine) {
+    public String insert(LogEntry logLine) {
         assertNull(logLine.getId());
 
         datastore.save(logLine);
@@ -24,8 +24,8 @@ public class MongoLoggingDao implements LoggingDao {
         return logLine.getId();
     }
 
-    public LogLineDO find(String id) {
-        return datastore.get(LogLineDO.class, id);
+    public LogEntry find(String id) {
+        return datastore.get(LogEntry.class, id);
     }
 
     @Autowired

@@ -1,6 +1,6 @@
 package api.mapping;
 
-import api.dataObject.LogLineDO;
+import api.domain.LogEntry;
 import api.model.model.LogLevel;
 import api.model.model.LogLine;
 import org.junit.Before;
@@ -22,7 +22,7 @@ public class LogLineDOMapperTest {
 
         LogLine logLine = new LogLine(LogLevel.DEBUG, "message", "details", "source", "12.34.56.78", System.currentTimeMillis());
 
-        LogLineDO logLineDO = mapper.mapTo(logLine);
+        LogEntry logLineDO = mapper.mapTo(logLine);
         assertNotNull(logLineDO);
         assertEquals(logLine.getSource(), logLineDO.getSource());
         assertEquals(logLine.getMessage(), logLineDO.getMessage());
@@ -38,14 +38,14 @@ public class LogLineDOMapperTest {
         LogLine log = new LogLine();
         log.setId("some id");
 
-        LogLineDO logLineDO = mapper.mapTo(log);
+        LogEntry logLineDO = mapper.mapTo(log);
         assertNull(logLineDO.getId());
     }
 
     @Test
     public void shouldMapFromLogLineDO() {
 
-        LogLineDO logLineDO = new LogLineDO();
+        LogEntry logLineDO = new LogEntry();
         logLineDO.setId("some id");
         logLineDO.setDetails("details");
         logLineDO.setIpAddress("ipaddress");

@@ -1,9 +1,9 @@
 package api.dao;
 
-import api.dataObject.LogLineDO;
+import api.domain.LogEntry;
 
 public interface LoggingDao {
-    String insert(LogLineDO logLine);
+    String insert(LogEntry logLine);
 
-    LogLineDO find(String logId);
+    LogEntry find(String logId);
 }
