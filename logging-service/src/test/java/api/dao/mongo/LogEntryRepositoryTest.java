@@ -11,12 +11,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.StringUtils;
 
 import java.net.UnknownHostException;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -41,7 +41,7 @@ public class LogEntryRepositoryTest {
         logLine.setLogTimeSec(System.currentTimeMillis());
 
         LogEntry saved = logEntryRepository.save(logLine);
-        assertNotNull(saved.getId());
+        assertTrue(StringUtils.hasLength(saved.getId()));
 
         LogEntry logLineFromSourceA = new LogEntry();
         logLineFromSourceA.setDetails("some details " + System.currentTimeMillis());

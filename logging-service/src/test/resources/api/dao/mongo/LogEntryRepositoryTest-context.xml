@@ -1,42 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-
-    <mongo:repositories base-package="api.dao"/>
 
     <context:property-placeholder
             location="classpath:api/dao/mongo/application-test.properties"
             ignore-resource-not-found="false"/>
 
-    <mongo:mongo id="mongo" host="${db.mongo.host}" port="${db.mongo.port}"/>
-
-    <mongo:db-factory id="mongoDbFactory" dbname="${db.mongo.dbName}" username="${db.mongo.userName}"
-                      password="${db.mongo.password}"
-                      mongo-ref="mongo"/>
-
-    <bean id="mongoTypeMapper" class="org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper">
-        <constructor-arg name="typeKey">
-            <null/>
-        </constructor-arg>
-    </bean>
-
-    <bean id="mongoMappingContext" class="org.springframework.data.mongodb.core.mapping.MongoMappingContext"/>
-
-    <bean id="mongoConverter" class="org.springframework.data.mongodb.core.convert.MappingMongoConverter">
-        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
-        <constructor-arg name="mappingContext" ref="mongoMappingContext"/>
-        <property name="typeMapper" ref="mongoTypeMapper"></property>
-    </bean>
-
-    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
-        <constructor-arg name="mongoConverter" ref="mongoConverter"/>
-        <property name="writeResultChecking" value="EXCEPTION"/>
-    </bean>
-
+    <import resource="spring-dao.xml"/>
 </beans>
