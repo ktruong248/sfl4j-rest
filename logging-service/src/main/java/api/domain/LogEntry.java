@@ -1,14 +1,9 @@
 package api.domain;
 
-import api.dao.mongo.BaseDOListener;
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.EntityListeners;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity(noClassnameStored = true, value = "logs")
-@EntityListeners(BaseDOListener.class)
 @Document(collection = "logs")
-public final class LogEntry extends BaseDomain {
+public class LogEntry extends BaseDomain {
 
     private String type;
 

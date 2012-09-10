@@ -1,6 +1,6 @@
 package api;
 
-import api.dao.LoggingDao;
+import api.dao.LogEntryRepository;
 import api.domain.LogEntry;
 import api.mapping.Mapper;
 import api.model.Event;
@@ -22,27 +22,28 @@ public class LoggingServiceImplTest {
     private LoggingServiceImpl service;
 
     @Mock
-    private LoggingDao dao;
+    private LogEntryRepository repository;
 
     @Mock
     private Mapper<LogEntry, Event> mapper;
 
     @Before
     public void setup() {
-        service = new LoggingServiceImpl();
-        service.setLoggingDao(dao);
-        service.setMapper(mapper);
+        service = new LoggingServiceImpl(repository, mapper);
     }
 
     @Test
     public void shouldInsert() {
         Event event = new Event();
-        String insertId = "some id";
+        String insertId = "savedId";
 
         LogEntry logEntry = new LogEntry();
 
+        LogEntry saved = new LogEntry();
+        saved.setId(insertId);
+
         given(mapper.mapTo(event)).willReturn(logEntry);
-        given(dao.insert(logEntry)).willReturn(insertId);
+        given(repository.save(logEntry)).willReturn(saved);
 
         InsertResponse insertResponse = service.insert(event);
         assertNotNull(insertResponse);
@@ -57,7 +58,7 @@ public class LoggingServiceImplTest {
         LogEntry logentry = new LogEntry();
         Event event = new Event();
 
-        given(dao.find(logId)).willReturn(logentry);
+        given(repository.findOne(logId)).willReturn(logentry);
         given(mapper.mapFrom(logentry)).willReturn(event);
 
         Event line = service.getById(logId);
@@ -68,7 +69,7 @@ public class LoggingServiceImplTest {
     public void shouldThrowNotFoundExceptionForNullLogEntry() {
         String logId = "some unknown id";
 
-        given(dao.find(logId)).willReturn(null);
+        given(repository.findOne(logId)).willReturn(null);
 
         service.getById(logId);
     }

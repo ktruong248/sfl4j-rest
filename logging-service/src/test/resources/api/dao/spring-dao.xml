@@ -32,5 +32,4 @@
         <constructor-arg name="mongoConverter" ref="mongoConverter"/>
         <property name="writeResultChecking" value="EXCEPTION"/>
     </bean>
-
 </beans>

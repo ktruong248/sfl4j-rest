@@ -1,7 +1,6 @@
-package api.dao.mongo;
+package api.dao;
 
 import api.common.Utils;
-import api.dao.LogEntryRepository;
 import api.domain.LogEntry;
 import api.model.LogLevel;
 import org.junit.Before;

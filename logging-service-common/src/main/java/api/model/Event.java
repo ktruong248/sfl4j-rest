@@ -1,6 +1,7 @@
 package api.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * An LogLine contains all the information for a single log event.
@@ -24,6 +25,8 @@ public final class Event implements Serializable {
     private String ipAddress;
 
     private long logTimeSec;
+
+    private Date created;
 
     public Event() {
     }
@@ -110,6 +113,14 @@ public final class Event implements Serializable {
      */
     public void setLogTimeSec(long logTimeSec) {
         this.logTimeSec = logTimeSec;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     @Override

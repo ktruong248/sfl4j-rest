@@ -1,16 +1,22 @@
 package api;
 
 import api.common.UniqueIdGenerator;
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.DatastoreImpl;
-import com.google.code.morphia.Morphia;
 import com.mongodb.Mongo;
 import com.mongodb.MongoOptions;
 import com.mongodb.ServerAddress;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.StringUtils;
+import org.springframework.data.authentication.UserCredentials;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import org.springframework.data.mongodb.core.WriteResultChecking;
+import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoTypeMapper;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 import java.net.UnknownHostException;
 
@@ -72,22 +78,43 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public Morphia morphia() {
-        return new com.google.code.morphia.Morphia();
-    }
-
-    @Bean
     public UniqueIdGenerator uniqueIdGenerator() {
         return new UniqueIdGenerator();
     }
 
     @Bean
-    public Datastore datastore() throws UnknownHostException {
+    public MongoTypeMapper mongoTypeMapper() {
+        return new DefaultMongoTypeMapper(null);
+    }
 
-        if (StringUtils.hasLength(dbUserName) && StringUtils.hasLength(dbPassword)) {
-            return new DatastoreImpl(morphia(), mongo(), dbName, dbUserName, dbPassword.toCharArray());
-        }
+    @Bean
+    public MongoMappingContext mongoMappingContext() {
+        return new MongoMappingContext();
+    }
 
-        return new DatastoreImpl(morphia(), mongo(), dbName);
+    @Bean
+    public UserCredentials userCredentials() {
+        return new UserCredentials(dbUserName, dbPassword);
+    }
+
+    @Bean
+    public MongoDbFactory mongoDbFactory() throws UnknownHostException {
+        return new SimpleMongoDbFactory(mongo(), dbName, userCredentials());
+    }
+
+    @Bean
+    public MongoConverter mongoConverter() throws UnknownHostException {
+        MappingMongoConverter converter = new MappingMongoConverter(mongoDbFactory(), mongoMappingContext());
+        converter.setTypeMapper(mongoTypeMapper());
+
+        return converter;
+    }
+
+    @Bean
+    public MongoTemplate mongoTemplate() throws UnknownHostException {
+        MongoTemplate template = new MongoTemplate(mongoDbFactory(), mongoConverter());
+        template.setWriteResultChecking(WriteResultChecking.EXCEPTION);
+
+        return template;
     }
 }

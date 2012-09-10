@@ -1,6 +1,6 @@
 package api;
 
-import api.dao.LoggingDao;
+import api.dao.LogEntryRepository;
 import api.domain.LogEntry;
 import api.mapping.Mapper;
 import api.model.Event;
@@ -15,36 +15,33 @@ import org.springframework.stereotype.Component;
 public class LoggingServiceImpl implements LoggingService {
     private static final Logger log = LoggerFactory.getLogger(LoggingServiceImpl.class);
 
-    private LoggingDao loggingDao;
+    private LogEntryRepository repository;
 
     private Mapper<LogEntry, Event> mapper;
+
+    @Autowired
+    public LoggingServiceImpl(LogEntryRepository repository, Mapper<LogEntry, Event> mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
     public InsertResponse insert(Event event) {
         log.info("inserting {}", event);
 
         LogEntry logEntry = mapper.mapTo(event);
-        String id = loggingDao.insert(logEntry);
 
-        return new InsertResponse(id);
+        LogEntry saved = repository.save(logEntry);
+
+        return new InsertResponse(saved.getId());
     }
 
     public Event getById(String id) {
-        LogEntry logEntry = loggingDao.find(id);
+        LogEntry logEntry = repository.findOne(id);
 
         if (logEntry != null) {
             return mapper.mapFrom(logEntry);
         }
 
         throw new NotFoundException("not found event id " + id);
-    }
-
-    @Autowired
-    public void setLoggingDao(LoggingDao loggingDao) {
-        this.loggingDao = loggingDao;
-    }
-
-    @Autowired
-    public void setMapper(Mapper<LogEntry, Event> mapper) {
-        this.mapper = mapper;
     }
 }
