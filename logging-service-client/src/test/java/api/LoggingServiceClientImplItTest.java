@@ -1,8 +1,8 @@
 package api;
 
 import api.common.Utils;
-import api.model.model.LogLevel;
-import api.model.model.LogLine;
+import api.model.Event;
+import api.model.LogLevel;
 import com.sun.jersey.api.client.config.ClientConfig;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -38,21 +38,14 @@ public class LoggingServiceClientImplITTest {
         long time = System.currentTimeMillis();
         String ipAddress = Utils.localAddress();
         String message = "some test message for " + time;
-        LogLine logLine = new LogLine(LogLevel.ERROR, message, "details", "dev", ipAddress, time);
+        Event event = new Event("log", LogLevel.ERROR.name(), message, "details", "dev", ipAddress, time);
 
-        String id = serviceClient.insert(logLine);
+        String id = serviceClient.insert(event);
         assertNotNull(id);
 
-        LogLine fetched = serviceClient.get(id);
+        Event fetched = serviceClient.get(id);
         assertNotNull(fetched);
         assertEquals(id, fetched.getId());
-    }
-
-    @Test
-    @Ignore("uncommented to run as integration test")
-    public void shouldGetById() {
-        LogLine logLine = serviceClient.get("ba9e6e0a-6c2a-492f-a325-dc1b6672061d");
-        assertNotNull(logLine);
     }
 
     @Test(expected = LoggingServiceClientException.class)

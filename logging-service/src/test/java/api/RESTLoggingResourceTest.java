@@ -1,8 +1,7 @@
 package api;
 
-import api.model.model.InsertResponse;
-import api.model.model.LogLevel;
-import api.model.model.LogLine;
+import api.model.Event;
+import api.model.InsertResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,11 +36,11 @@ public class RESTLoggingResourceTest {
 
     @Test
     public void shouldInsert() {
-        LogLine logLine = new LogLine(LogLevel.FATAL, "message", "details", "sample app", "127.0.0.1", System.currentTimeMillis());
+        Event event = new Event("log", "FATAL", "message", "details", "sample app", "127.0.0.1", System.currentTimeMillis());
 
-        given(loggingService.insert(logLine)).willReturn(new InsertResponse("some id"));
+        given(loggingService.insert(event)).willReturn(new InsertResponse("some id"));
 
-        Response insertResponse = resource.insert(logLine);
+        Response insertResponse = resource.insert(event);
         assertNotNull(insertResponse);
         assertEquals(Response.Status.CREATED.getStatusCode(), insertResponse.getStatus());
     }
@@ -49,9 +48,9 @@ public class RESTLoggingResourceTest {
     @Test
     public void shouldAbleToGetById() {
 
-        given(loggingService.getById("some-id")).willReturn(new LogLine());
+        given(loggingService.getById("some-id")).willReturn(new Event());
 
-        LogLine logLine = resource.getById("some-id");
-        assertNotNull(logLine);
+        Event event = resource.getById("some-id");
+        assertNotNull(event);
     }
 }

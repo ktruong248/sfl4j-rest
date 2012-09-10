@@ -1,7 +1,6 @@
 package api.domain;
 
 import api.dao.mongo.BaseDOListener;
-import api.model.model.LogLevel;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.EntityListeners;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,7 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "logs")
 public final class LogEntry extends BaseDomain {
 
-    private LogLevel logLevel;
+    private String type;
+
+    private String category;
 
     private String message;
 
@@ -23,12 +24,12 @@ public final class LogEntry extends BaseDomain {
 
     private long logTimeSec;
 
-    public LogLevel getLogLevel() {
-        return logLevel;
+    public String getCategory() {
+        return category;
     }
 
-    public void setLogLevel(LogLevel logLevel) {
-        this.logLevel = logLevel;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getMessage() {
@@ -71,14 +72,20 @@ public final class LogEntry extends BaseDomain {
         this.logTimeSec = logTimeSec;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("LogLineDO");
-        sb.append("{logLevel=").append(logLevel);
-        sb.append(", id='").append(getId()).append('\'');
-        sb.append(", created='").append(getCreated()).append('\'');
-        sb.append(", modified='").append(getModified()).append('\'');
+        sb.append("LogEntry");
+        sb.append("{type='").append(type).append('\'');
+        sb.append(", category='").append(category).append('\'');
         sb.append(", message='").append(message).append('\'');
         sb.append(", details='").append(details).append('\'');
         sb.append(", source='").append(source).append('\'');

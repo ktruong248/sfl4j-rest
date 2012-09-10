@@ -3,8 +3,8 @@ package log4j.appender;
 import api.LoggingServiceClient;
 import api.LoggingServiceClientImpl;
 import api.common.Utils;
-import api.model.model.LogLevel;
-import api.model.model.LogLine;
+import api.model.Event;
+import api.model.LogLevel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
@@ -80,6 +80,6 @@ public class SFLLog4jAppender extends AppenderSkeleton {
     protected void doLog(LogLevel logLevel, String msg, String source, String ipAddress, Throwable throwable) {
         long logTimeSec = System.currentTimeMillis();
         String details = (throwable != null) ? ExceptionUtils.getStackTrace(throwable) : "";
-        getLoggingClient().insert(new LogLine(logLevel, msg, details, source, ipAddress, logTimeSec));
+        getLoggingClient().insert(new Event("log", logLevel.name(), msg, details, source, ipAddress, logTimeSec));
     }
 }

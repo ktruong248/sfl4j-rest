@@ -1,10 +1,10 @@
 package api;
 
-import api.model.model.InsertResponse;
-import api.model.model.LogLine;
+import api.model.Event;
+import api.model.InsertResponse;
 
 public interface LoggingService {
-    InsertResponse insert(LogLine logLine);
+    InsertResponse insert(Event event);
 
-    LogLine getById(String id);
+    Event getById(String id);
 }

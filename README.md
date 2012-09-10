@@ -27,7 +27,7 @@ Quick Start
     $ mvn exec-java
 
     # sample insert new log entry
-    $ curl -H "Content-Type: application/json" -X POST -d "{\"logLevel\":\"INFO\",\"message\":\"my log message\",\"details\":\"my long message details\",\"source\":\"sample app\",\"ipAddress\":\"127.0.0.1\",\"logTimeSec\":1247573626}" http://localhost:8080/logs
+    $ curl -H "Content-Type: application/json" -X POST -d "{\"type\":\"log\",\"category\":\"INFO\",\"message\":\"my log message\",\"details\":\"my long message details\",\"source\":\"sample app\",\"ipAddress\":\"127.0.0.1\",\"logTimeSec\":1247573626}" http://localhost:8080/logs
 
 
     # sample get

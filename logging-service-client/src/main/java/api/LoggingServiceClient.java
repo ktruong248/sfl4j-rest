@@ -1,10 +1,11 @@
 package api;
 
-import api.model.model.LogLine;
+
+import api.model.Event;
 
 public interface LoggingServiceClient {
 
-    String insert(LogLine logLine);
+    String insert(Event event);
 
-    LogLine get(String id);
+    Event get(String id);
 }

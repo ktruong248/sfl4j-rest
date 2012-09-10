@@ -1,17 +1,19 @@
-package api.model.model;
+package api.model;
 
 import java.io.Serializable;
 
 /**
  * An LogLine contains all the information for a single log event.
  */
-public final class LogLine implements Serializable {
+public final class Event implements Serializable {
 
     private static final long serialVersionUID = 2988958435513107789L;
 
     private String id;
 
-    private LogLevel logLevel;
+    private String type;
+
+    private String category;
 
     private String message;
 
@@ -23,16 +25,17 @@ public final class LogLine implements Serializable {
 
     private long logTimeSec;
 
-    public LogLine() {
+    public Event() {
     }
 
-    public LogLine(LogLevel logLevel, String message, String details, String source, String ipAddress, long logTimeSec) {
-        this.logLevel = logLevel;
+    public Event(String type, String category, String message, String details, String source, String ipAddress, long logTimeSec) {
         this.message = message;
         this.details = details;
         this.source = source;
         this.ipAddress = ipAddress;
         this.logTimeSec = logTimeSec;
+        this.type = type;
+        this.category = category;
     }
 
     public String getId() {
@@ -43,17 +46,20 @@ public final class LogLine implements Serializable {
         this.id = id;
     }
 
-    public LogLevel getLogLevel() {
-        return logLevel;
+    public String getType() {
+        return type;
     }
 
-    /**
-     * the log level for this event
-     *
-     * @param logLevel the log level
-     */
-    public void setLogLevel(LogLevel logLevel) {
-        this.logLevel = logLevel;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getMessage() {
@@ -111,7 +117,8 @@ public final class LogLine implements Serializable {
         final StringBuilder sb = new StringBuilder();
         sb.append("LogLine");
         sb.append("{id='").append(id).append('\'');
-        sb.append(", logLevel=").append(logLevel);
+        sb.append(", type='").append(type).append('\'');
+        sb.append(", category='").append(category).append('\'');
         sb.append(", message='").append(message).append('\'');
         sb.append(", details='").append(details).append('\'');
         sb.append(", source='").append(source).append('\'');

@@ -1,8 +1,8 @@
 package org.slf4j.rest.impl;
 
 import api.LoggingServiceClient;
-import api.model.model.LogLevel;
-import api.model.model.LogLine;
+import api.model.Event;
+import api.model.LogLevel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -65,7 +65,7 @@ public class LoggingRESTService4jLogger implements RESTServiceLogger {
         try {
             long logTimeSec = System.currentTimeMillis();
             String details = (throwable != null) ? ExceptionUtils.getStackTrace(throwable) : "";
-            loggingServiceClient.insert(new LogLine(logLevel, msg, details, source, ipAddress, logTimeSec));
+            loggingServiceClient.insert(new Event("log", logLevel.name(), msg, details, source, ipAddress, logTimeSec));
         } catch (com.sun.jersey.api.client.ClientHandlerException e) {
             // ignore any error and just fall back to standard logger
             if (logger.isTraceEnabled()) {

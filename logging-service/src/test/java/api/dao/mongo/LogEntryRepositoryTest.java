@@ -3,7 +3,7 @@ package api.dao.mongo;
 import api.common.Utils;
 import api.dao.LogEntryRepository;
 import api.domain.LogEntry;
-import api.model.model.LogLevel;
+import api.model.LogLevel;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -33,27 +33,29 @@ public class LogEntryRepositoryTest {
     @Test
     @Ignore("this require mongo to be running so have to ignore")
     public void shouldAbleToCreate() {
-        LogEntry logLine = new LogEntry();
-        logLine.setDetails("some details " + System.currentTimeMillis());
-        logLine.setLogLevel(LogLevel.ERROR);
-        logLine.setSource("test-source");
-        logLine.setIpAddress(Utils.localAddress());
-        logLine.setLogTimeSec(System.currentTimeMillis());
+        LogEntry logEntry = new LogEntry();
+        logEntry.setDetails("some details " + System.currentTimeMillis());
+        logEntry.setType("log");
+        logEntry.setCategory(LogLevel.ERROR.name());
+        logEntry.setSource("test-source");
+        logEntry.setIpAddress(Utils.localAddress());
+        logEntry.setLogTimeSec(System.currentTimeMillis());
 
-        LogEntry saved = logEntryRepository.save(logLine);
+        LogEntry saved = logEntryRepository.save(logEntry);
         assertTrue(StringUtils.hasLength(saved.getId()));
 
-        LogEntry logLineFromSourceA = new LogEntry();
-        logLineFromSourceA.setDetails("some details " + System.currentTimeMillis());
-        logLineFromSourceA.setLogLevel(LogLevel.ERROR);
-        logLineFromSourceA.setSource("source-a");
-        logLineFromSourceA.setIpAddress(Utils.localAddress());
-        logLineFromSourceA.setLogTimeSec(System.currentTimeMillis());
-        logEntryRepository.save(logLineFromSourceA);
+        LogEntry logEntryFromSourceA = new LogEntry();
+        logEntryFromSourceA.setDetails("some details " + System.currentTimeMillis());
+        logEntryFromSourceA.setCategory(LogLevel.ERROR.name());
+        logEntryFromSourceA.setType("log");
+        logEntryFromSourceA.setSource("source-a");
+        logEntryFromSourceA.setIpAddress(Utils.localAddress());
+        logEntryFromSourceA.setLogTimeSec(System.currentTimeMillis());
+        logEntryRepository.save(logEntryFromSourceA);
 
-        List<LogEntry> found = logEntryRepository.findBySource(logLine.getSource());
+        List<LogEntry> found = logEntryRepository.findBySource(logEntry.getSource());
         assertNotNull(found);
         assertEquals(1, found.size());
-        assertEquals(logLine.getSource(), found.get(0).getSource());
+        assertEquals(logEntry.getSource(), found.get(0).getSource());
     }
 }

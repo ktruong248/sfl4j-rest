@@ -1,11 +1,11 @@
 package api;
 
-import api.model.model.LogLine;
+import api.model.Event;
 
 import javax.ws.rs.core.Response;
 
 public interface LoggingResource {
-    Response insert(LogLine logLine);
+    Response insert(Event event);
 
-    LogLine getById(String id);
+    Event getById(String id);
 }

@@ -3,8 +3,8 @@ package api;
 import api.dao.LoggingDao;
 import api.domain.LogEntry;
 import api.mapping.Mapper;
-import api.model.model.InsertResponse;
-import api.model.model.LogLine;
+import api.model.Event;
+import api.model.InsertResponse;
 import com.sun.jersey.api.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,25 +17,25 @@ public class LoggingServiceImpl implements LoggingService {
 
     private LoggingDao loggingDao;
 
-    private Mapper<LogEntry> mapper;
+    private Mapper<LogEntry, Event> mapper;
 
-    public InsertResponse insert(LogLine logLine) {
-        log.info("inserting {}", logLine);
+    public InsertResponse insert(Event event) {
+        log.info("inserting {}", event);
 
-        LogEntry logLineDO = mapper.mapTo(logLine);
-        String id = loggingDao.insert(logLineDO);
+        LogEntry logEntry = mapper.mapTo(event);
+        String id = loggingDao.insert(logEntry);
 
         return new InsertResponse(id);
     }
 
-    public LogLine getById(String id) {
-        LogEntry logLineDO = loggingDao.find(id);
+    public Event getById(String id) {
+        LogEntry logEntry = loggingDao.find(id);
 
-        if (logLineDO != null) {
-            return mapper.mapFrom(logLineDO);
+        if (logEntry != null) {
+            return mapper.mapFrom(logEntry);
         }
 
-        throw new NotFoundException("not found log id " + id);
+        throw new NotFoundException("not found event id " + id);
     }
 
     @Autowired
@@ -44,7 +44,7 @@ public class LoggingServiceImpl implements LoggingService {
     }
 
     @Autowired
-    public void setMapper(Mapper<LogEntry> mapper) {
+    public void setMapper(Mapper<LogEntry, Event> mapper) {
         this.mapper = mapper;
     }
 }

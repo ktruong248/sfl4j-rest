@@ -1,7 +1,7 @@
 package api;
 
-import api.model.model.InsertResponse;
-import api.model.model.LogLine;
+import api.model.Event;
+import api.model.InsertResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +16,14 @@ public class RESTLoggingResource implements LoggingResource {
     private LoggingService loggingService;
 
     @POST
-    public Response insert(LogLine logLine) {
-        InsertResponse insertResponse = loggingService.insert(logLine);
+    public Response insert(Event event) {
+        InsertResponse insertResponse = loggingService.insert(event);
         return Response.status(Response.Status.CREATED).entity(insertResponse).build();
     }
 
     @GET
-    @Path("/{logId}")
-    public LogLine getById(@PathParam("logId") String id) {
+    @Path("/{eventId}")
+    public Event getById(@PathParam("eventId") String id) {
         return loggingService.getById(id);
     }
 

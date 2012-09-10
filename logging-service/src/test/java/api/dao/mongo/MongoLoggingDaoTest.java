@@ -29,11 +29,11 @@ public class MongoLoggingDaoTest {
 
     @Test
     public void shouldInsert() {
-        LogEntry logLine = new LogEntry();
+        LogEntry logEntry = new LogEntry();
 
-        dao.insert(logLine);
+        dao.insert(logEntry);
 
-        verify(dataStore, times(1)).save(logLine);
+        verify(dataStore, times(1)).save(logEntry);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class MongoLoggingDaoTest {
         String id = "some id";
         given(dataStore.get(LogEntry.class, id)).willReturn(new LogEntry());
 
-        LogEntry logLineDO = dao.find(id);
-        assertNotNull(logLineDO);
+        LogEntry logEntry = dao.find(id);
+        assertNotNull(logEntry);
     }
 }

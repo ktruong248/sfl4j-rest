@@ -15,13 +15,13 @@ public class MongoLoggingDao implements LoggingDao {
     private static final Logger log = LoggerFactory.getLogger(MongoLoggingDao.class);
     private Datastore datastore;
 
-    public String insert(LogEntry logLine) {
-        assertNull(logLine.getId());
+    public String insert(LogEntry logEntry) {
+        assertNull(logEntry.getId());
 
-        datastore.save(logLine);
-        log.info("insert {}", logLine);
+        datastore.save(logEntry);
+        log.info("insert {}", logEntry);
 
-        return logLine.getId();
+        return logEntry.getId();
     }
 
     public LogEntry find(String id) {

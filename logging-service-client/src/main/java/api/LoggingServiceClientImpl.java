@@ -1,7 +1,7 @@
 package api;
 
-import api.model.model.InsertResponse;
-import api.model.model.LogLine;
+import api.model.Event;
+import api.model.InsertResponse;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -43,21 +43,21 @@ public final class LoggingServiceClientImpl implements LoggingServiceClient {
         this.client.setConnectTimeout(connectTimeoutMs);
     }
 
-    public String insert(LogLine logLine) {
+    public String insert(Event event) {
         URI insertURI = UriBuilder.fromPath(this.serviceUrl).build();
         WebResource resource = client.resource(insertURI);
-        ClientResponse clientResponse = resource.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, logLine);
+        ClientResponse clientResponse = resource.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, event);
         InsertResponse insertResponse = clientResponse.getEntity(InsertResponse.class);
 
-        return insertResponse.getLogId();
+        return insertResponse.getCreatedId();
     }
 
-    public LogLine get(String id) {
-        URI getURI = UriBuilder.fromPath(this.serviceUrl).path("{logId}").build(id);
+    public Event get(String id) {
+        URI getURI = UriBuilder.fromPath(this.serviceUrl).path("{eventId}").build(id);
         WebResource resource = client.resource(getURI);
         try {
             ClientResponse response = resource.get(ClientResponse.class);
-            return response.getEntity(LogLine.class);
+            return response.getEntity(Event.class);
         } catch (Exception e) {
             throw new LoggingServiceClientException(ErrorCode.FAILED_TO_GET.name(), e.getMessage(), e);
         }

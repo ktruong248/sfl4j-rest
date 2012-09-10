@@ -3,8 +3,8 @@ package api;
 import api.dao.LoggingDao;
 import api.domain.LogEntry;
 import api.mapping.Mapper;
-import api.model.model.InsertResponse;
-import api.model.model.LogLine;
+import api.model.Event;
+import api.model.InsertResponse;
 import com.sun.jersey.api.NotFoundException;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class LoggingServiceImplTest {
     private LoggingDao dao;
 
     @Mock
-    private Mapper<LogEntry> mapper;
+    private Mapper<LogEntry, Event> mapper;
 
     @Before
     public void setup() {
@@ -36,17 +36,17 @@ public class LoggingServiceImplTest {
 
     @Test
     public void shouldInsert() {
-        LogLine logLine = new LogLine();
+        Event event = new Event();
         String insertId = "some id";
 
-        LogEntry logLineDO = new LogEntry();
+        LogEntry logEntry = new LogEntry();
 
-        given(mapper.mapTo(logLine)).willReturn(logLineDO);
-        given(dao.insert(logLineDO)).willReturn(insertId);
+        given(mapper.mapTo(event)).willReturn(logEntry);
+        given(dao.insert(logEntry)).willReturn(insertId);
 
-        InsertResponse insertResponse = service.insert(logLine);
+        InsertResponse insertResponse = service.insert(event);
         assertNotNull(insertResponse);
-        assertEquals(insertId, insertResponse.getLogId());
+        assertEquals(insertId, insertResponse.getCreatedId());
     }
 
     @Test
@@ -54,18 +54,18 @@ public class LoggingServiceImplTest {
 
         String logId = "some id";
 
-        LogEntry logLineDO = new LogEntry();
-        LogLine logLine = new LogLine();
+        LogEntry logentry = new LogEntry();
+        Event event = new Event();
 
-        given(dao.find(logId)).willReturn(logLineDO);
-        given(mapper.mapFrom(logLineDO)).willReturn(logLine);
+        given(dao.find(logId)).willReturn(logentry);
+        given(mapper.mapFrom(logentry)).willReturn(event);
 
-        LogLine line = service.getById(logId);
+        Event line = service.getById(logId);
         assertNotNull(line);
     }
 
     @Test(expected = NotFoundException.class)
-    public void shouldThrowNotFoundExceptionForNullLogLineDO() {
+    public void shouldThrowNotFoundExceptionForNullLogEntry() {
         String logId = "some unknown id";
 
         given(dao.find(logId)).willReturn(null);
