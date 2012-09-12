@@ -1,0 +1,9 @@
+{
+ "type": "<%= eventType %>",
+ "category": "<%= category %>",
+ "message": "<%= message %>",
+ "details": "<%= messageDetails %>",
+ "source": "<%= source %>",
+ "ipAddress":"127.0.0.1",
+ "logTimeSec": <%= logTimeSec %>
+}
